@@ -79,7 +79,7 @@ namespace ofxImGui
 	void BaseEngine::setClipboardString(const char * text)
 	{
 		static string str = ofToString(text);
-		ofGetWindowPtr()->setClipboardString(str.c_str());
+		ofGetWindowPtr()->setClipboardString(str);
 	}
 
 	//--------------------------------------------------------------

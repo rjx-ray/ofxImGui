@@ -46,8 +46,9 @@ namespace ofxImGui
 			io.RenderDrawListsFn = fixedRenderDrawLists;
 		}
 
-		io.SetClipboardTextFn = &BaseEngine::setClipboardString;
-		io.GetClipboardTextFn = &BaseEngine::getClipboardString;
+		// Leave ImGui functions in place - see https://github.com/jvcleave/ofxImGui/issues/56
+		//io.SetClipboardTextFn = &BaseEngine::setClipboardString;
+		//io.GetClipboardTextFn = &BaseEngine::getClipboardString;
 
 		createDeviceObjects();
 
