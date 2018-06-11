@@ -2,11 +2,11 @@
 
 //--------------------------------------------------------------
 ofxImGui::Settings::Settings()
-	: windowPos(kGuiMargin, kGuiMargin)
+	: windowPos(kImGuiMargin, kImGuiMargin)
 	, windowSize(ofVec2f::zero())
 	, windowBlock(false)
-	, treeLevel(0)
 	, mouseOverGui(false)
+    , treeLevel(0)
 {}
 
 //--------------------------------------------------------------
@@ -31,7 +31,7 @@ const char * ofxImGui::GetUniqueName(const std::string& candidate)
 void ofxImGui::SetNextWindow(Settings& settings)
 {
 	settings.windowSize.x = 0;
-	settings.windowPos.y += settings.windowSize.y + kGuiMargin;
+	settings.windowPos.y += settings.windowSize.y + kImGuiMargin;
 }
 
 //--------------------------------------------------------------
@@ -447,6 +447,20 @@ bool ofxImGui::AddStepper(ofParameter<int>& parameter, int step, int stepFast)
 }
 
 //--------------------------------------------------------------
+bool ofxImGui::AddRange(const string& name, ofParameter<int>& parameterMin, ofParameter<int>& parameterMax, int speed)
+{
+	auto tmpRefMin = parameterMin.get();
+	auto tmpRefMax = parameterMax.get();
+	if (ImGui::DragIntRange2(GetUniqueName(name), &tmpRefMin, &tmpRefMax, speed, parameterMin.getMin(), parameterMax.getMax()))
+	{
+		parameterMin.set(tmpRefMin);
+		parameterMax.set(tmpRefMax);
+		return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
 bool ofxImGui::AddRange(const string& name, ofParameter<float>& parameterMin, ofParameter<float>& parameterMax, float speed)
 {
 	auto tmpRefMin = parameterMin.get();
@@ -459,6 +473,91 @@ bool ofxImGui::AddRange(const string& name, ofParameter<float>& parameterMin, of
 	}
 	return false;
 }
+
+#if OF_VERSION_MINOR >= 10
+
+//--------------------------------------------------------------
+bool ofxImGui::AddRange(const string& name, ofParameter<glm::vec2>& parameterMin, ofParameter<glm::vec2>& parameterMax, float speed)
+{
+	auto result = false;
+	auto tmpRefMin = parameterMin.get();
+	auto tmpRefMax = parameterMax.get();
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " X"), &tmpRefMin.x, &tmpRefMax.x, speed, parameterMin.getMin().x, parameterMax.getMax().x))
+	{
+		result |= true;
+	}
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " Y"), &tmpRefMin.y, &tmpRefMax.y, speed, parameterMin.getMin().y, parameterMax.getMax().y))
+	{
+		result |= true;
+	}
+	if (result)
+	{
+		parameterMin.set(tmpRefMin);
+		parameterMax.set(tmpRefMax);
+		return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
+bool ofxImGui::AddRange(const string& name, ofParameter<glm::vec3>& parameterMin, ofParameter<glm::vec3>& parameterMax, float speed)
+{
+	auto result = false;
+	auto tmpRefMin = parameterMin.get();
+	auto tmpRefMax = parameterMax.get();
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " X"), &tmpRefMin.x, &tmpRefMax.x, speed, parameterMin.getMin().x, parameterMax.getMax().x))
+	{
+		result |= true;
+	}
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " Y"), &tmpRefMin.y, &tmpRefMax.y, speed, parameterMin.getMin().y, parameterMax.getMax().y))
+	{
+		result |= true;
+	}
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " Z"), &tmpRefMin.z, &tmpRefMax.z, speed, parameterMin.getMin().z, parameterMax.getMax().z))
+	{
+		result |= true;
+	}
+	if (result)
+	{
+		parameterMin.set(tmpRefMin);
+		parameterMax.set(tmpRefMax);
+		return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
+bool ofxImGui::AddRange(const string& name, ofParameter<glm::vec4>& parameterMin, ofParameter<glm::vec4>& parameterMax, float speed)
+{
+	auto result = false;
+	auto tmpRefMin = parameterMin.get();
+	auto tmpRefMax = parameterMax.get();
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " X"), &tmpRefMin.x, &tmpRefMax.x, speed, parameterMin.getMin().x, parameterMax.getMax().x))
+	{
+		result |= true;
+	}
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " Y"), &tmpRefMin.y, &tmpRefMax.y, speed, parameterMin.getMin().y, parameterMax.getMax().y))
+	{
+		result |= true;
+	}
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " Z"), &tmpRefMin.z, &tmpRefMax.z, speed, parameterMin.getMin().z, parameterMax.getMax().z))
+	{
+		result |= true;
+	}
+	if (ImGui::DragFloatRange2(GetUniqueName(name + " W"), &tmpRefMin.w, &tmpRefMax.w, speed, parameterMin.getMin().w, parameterMax.getMax().w))
+	{
+		result |= true;
+	}
+	if (result)
+	{
+		parameterMin.set(tmpRefMin);
+		parameterMax.set(tmpRefMax);
+		return true;
+	}
+	return false;
+}
+
+#endif
 
 #if OF_VERSION_MINOR >= 10
 
@@ -584,3 +683,6 @@ void ofxImGui::AddImage(ofTexture& texture, const ofVec2f& size)
 	ImTextureID textureID = (ImTextureID)(uintptr_t)texture.texData.textureID;
 	ImGui::Image(textureID, size);
 }
+
+//--------------------------------------------------------------
+
